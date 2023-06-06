@@ -55,7 +55,7 @@ subtest.testX.ibm.com
 
 Now, the file containing the subdomanis can be passed to **sub.Monitor** with the following command:
 
-````bash
+````console
 python3 monitor.py --add ibm.com --file ibm_sorted_subdomains.txt
           _    ___  ___            _ _
           | |   |  \/  |           (_) |
