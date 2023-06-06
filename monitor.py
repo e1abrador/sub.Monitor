@@ -10,7 +10,7 @@ import configparser
 DATABASE = 'subdomains.db'
 
 config = configparser.ConfigParser()
-config.read('config/sub.monitor-config.ini')
+config.read('sub.monitor-config.ini')
 
 def print_banner():
     print('''
