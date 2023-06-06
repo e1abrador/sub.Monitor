@@ -40,7 +40,7 @@ options:
 - [Amass](https://github.com/owasp-amass/amass/blob/master/examples/config.ini) api configuration file.
 - [Notify]() api configuration file.
 - Finally, you will need to specify the binary and config paths on **config/sub.monitor-config.ini** file.
-  ## Work plan
+ ## Work plan
 
 First of all **sub.Monitor** needs a list of already scanned domains:
 
