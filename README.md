@@ -94,7 +94,7 @@ python3 monitor.py -d ibm.com -h 8
 If any subdomain is found, sub.Monitor will show the following message on the output:
 
 ````console
-➜  monitor python3 monitor.py -d ibm.com -h 12
+➜ python3 monitor.py -d ibm.com -h 12
 
           _    ___  ___            _ _
           | |   |  \/  |           (_) |
