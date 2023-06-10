@@ -152,4 +152,4 @@ subdomain2.ibm.com
 
 ## Changelog
 
-10/06/2023: Created requirements.txt
+**10/06/2023:** Created requirements.txt
