@@ -141,3 +141,13 @@ subdomain2.ibm.com
   - Projectdiscovery for creating [subfinder](https://github.com/projectdiscovery/subfinder) and [notify](https://github.com/projectdiscovery/notify)!.
   - Thanks to OWASP for their amazing project [amass](https://github.com/owasp-amass/amass/)!.
   - Thanks to Tomnomnom for coding [assetfinder](https://github.com/tomnomnom/assetfinder)!.
+
+## TODO
+
+- Implement the monitoring of more than 1 subdomain.
+- Instead of using 1 database, create a folder with a .db file for each subdomain to scan.
+- Continously read the domain files so new domains can be scanned without stopping the program.
+
+## Changelog
+
+10/06/2023: Created requirements.txt
