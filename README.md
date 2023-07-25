@@ -38,6 +38,7 @@ options:
   
 - [Subfinder](https://github.com/projectdiscovery/subfinder/tree/main#post-installation-instructions) api configuration file.
 - [Amass](https://github.com/owasp-amass/amass/blob/master/examples/config.ini) api configuration file.
+- [Assetfinder](https://github.com/tomnomnom/assetfinder)
 - [Notify]() api configuration file.
 - You will need to specify the binary and config paths on **sub.monitor-config.ini** file.
 - Finally, execute ``pip3 install -r requirements.txt``
