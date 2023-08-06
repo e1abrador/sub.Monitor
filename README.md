@@ -38,7 +38,6 @@ options:
   
 - [Subfinder](https://github.com/projectdiscovery/subfinder/tree/main#post-installation-instructions) api configuration file.
 - [Amass](https://github.com/owasp-amass/amass/blob/master/examples/config.ini) api configuration file.
-- [Assetfinder](https://github.com/tomnomnom/assetfinder)
 - [Notify]() api configuration file.
 - You will need to specify the binary and config paths on **sub.monitor-config.ini** file.
 - Finally, execute ``pip3 install -r requirements.txt``
@@ -85,7 +84,8 @@ python3 monitor.py --list
 
                     github.com/e1abrador/sub.Monitor
 
-ibm.com
+ibm.com [9 subdomains added manually] [2 subdomains discovered] [11 total unique in database]
+
 ````
 
 Once it has been correctly loaded, the monitoring process can start. It is recommended to use TMUX in a VPS and leave it running for a long time. With the following command, the script will be running the subdomain enumeration tools and will compare the new results with the old results. If there's any new subdomain found, sub.Monitor will first add it to the local database (so it will not notify anymore about that discovery) and then will notify the user via slack/telegram/discord.
@@ -111,6 +111,12 @@ If any subdomain is found, sub.Monitor will show the following message on the ou
 [2023-06-06 18:07:25.191169] - New subdomain xxxx.ibm.com discovered
 [2023-06-06 18:07:25.353156] - New subdomain xyxyxyxyxyx.ibm.com discovered
 [2023-06-06 18:07:25.641082] - New subdomain x1.xxxx.ibm.com discovered
+````
+
+It is also possible to monitor more than 1 domain, with the following command:
+
+````console
+python3 monitor.py -df root-domains.txt -h 8
 ````
 
 After those messages are reported, on the same time the user will recieve the notifications on telegram
@@ -143,7 +149,6 @@ subdomain2.ibm.com
   
   - Projectdiscovery for creating [subfinder](https://github.com/projectdiscovery/subfinder) and [notify](https://github.com/projectdiscovery/notify)!.
   - Thanks to OWASP for their amazing project [amass](https://github.com/owasp-amass/amass/)!.
-  - Thanks to Tomnomnom for coding [assetfinder](https://github.com/tomnomnom/assetfinder)!.
 
 ## TODO
 
