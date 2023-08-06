@@ -152,9 +152,8 @@ subdomain2.ibm.com
 
 ## TODO
 
-- Implement the monitoring of more than 1 subdomain.
-- Instead of using 1 database, create a folder with a .db file for each subdomain to scan.
-- Continously read the domain files so new domains can be scanned without stopping the program.
+- Implement the monitoring of more than 1 subdomain. [DONE] 
+- Continously read the domain files so new domains can be scanned without stopping the program. [DONE]
 
 ## Changelog
 
