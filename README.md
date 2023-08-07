@@ -173,7 +173,3 @@ test2.ibm.com [discovered on 06/08/2023]
 
 - Implement the monitoring of more than 1 subdomain. [DONE] 
 - Continously read the domain files so new domains can be scanned without stopping the program. [DONE]
-
-## Changelog
-
-**10/06/2023:** Created requirements.txt
