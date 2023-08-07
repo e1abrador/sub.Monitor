@@ -143,6 +143,25 @@ subdomain2.ibm.com
 ...
 ````
 
+También se puede utilizar el siguiente comando para poder ver el día en el cual se descubrió el dominio:
+
+````console
+python3 monitor.py -d ibm.com --dump --info
+
+          _    ___  ___            _ _
+          | |   |  \/  |           (_) |
+ ___ _   _| |__ | .  . | ___  _ __  _| |_ ___  _ __
+/ __| | | | '_ \| |\/| |/ _ \| '_ \| | __/ _ \| '__|
+\__ \ |_| | |_) | |  | | (_) | | | | | || (_) | |
+|___/\__,_|_.__/\_|  |_/\___/|_| |_|_|\__\___/|_|
+
+                    github.com/e1abrador/sub.Monitor
+
+Subdomains for ibm.com:
+test.ibm.com [discovered on 06/08/2023]
+test2.ibm.com [discovered on 06/08/2023]
+````
+
   ## Thanks
   
   Thanks to:
