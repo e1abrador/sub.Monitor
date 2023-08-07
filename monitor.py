@@ -29,7 +29,9 @@ def print_banner():
 def initialize_db():
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
-        cursor.execute('CREATE TABLE IF NOT EXISTS subdomains (subdomain TEXT, added_manually INTEGER, discovered INTEGER)')
+        cursor.execute('''CREATE TABLE IF NOT EXISTS subdomains 
+                          (subdomain TEXT, added_manually INTEGER, 
+                           discovered INTEGER, discovered_on TEXT)''')
 
 def get_known_subdomains():
     with sqlite3.connect(DATABASE) as conn:
@@ -42,10 +44,13 @@ def insert_subdomains(subdomains, manually=False):
     known_subdomains = get_known_subdomains()
     
     new_subdomains = [sub for sub in unique_subdomains if sub not in known_subdomains]
+    current_date = datetime.datetime.now().strftime('%d/%m/%Y')  # Get the current date
     
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
-        cursor.executemany('INSERT INTO subdomains VALUES (?, ?, ?)', [(sub, int(manually), int(not manually)) for sub in new_subdomains])
+        # Include the discovery date when inserting a new subdomain
+        cursor.executemany('INSERT INTO subdomains VALUES (?, ?, ?, ?)', 
+                           [(sub, int(manually), int(not manually), current_date) for sub in new_subdomains])
     
     return len(new_subdomains)
 
@@ -67,7 +72,7 @@ def list_domains():
 
     total_unique = count_total_unique_subdomains()
     for domain, (manually, discovered) in domains.items():
-        print(f"{domain} [{manually} subdomains added manually] [{discovered} subdomains discovered] [{manually + discovered} total unique in database]")
+        print(f"{domain} [{manually + discovered} total unique in database] [{manually} subdomains added manually] [{discovered} subdomains discovered]")
 
 def count_total_unique_subdomains():
     with sqlite3.connect(DATABASE) as conn:
@@ -79,7 +84,7 @@ def notify(subdomain, domain):
 
     notify_binary = config.get('Binary paths', 'notify')
     notify_api = config.get('Api', 'notify_api')
-    command = f'echo "Subdomain {subdomain} has been discovered! for {domain}" | {notify_binary} -silent -config {notify_api}'
+    command = f'echo "Subdomain {subdomain} has been discovered!" | {notify_binary} -silent -config {notify_api} -id {domain}'
     subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
 def run_tool(tool, domain, output_file):
@@ -103,12 +108,20 @@ def run_tool(tool, domain, output_file):
         for subdomain in result:
             print(subdomain, file=f)
 
-def dump_subdomains(domain):
+def dump_subdomains(domain, show_info=False):  # Add show_info argument
     known = get_known_subdomains()
     print(f"Subdomains for {domain}:")
-    for subdomain in known:
-        if domain in subdomain:
-            print(subdomain)
+    
+    with sqlite3.connect(DATABASE) as conn:
+        cursor = conn.cursor()
+        for subdomain in known:
+            if domain in subdomain:
+                if show_info:
+                    cursor.execute('SELECT discovered_on FROM subdomains WHERE subdomain = ?', (subdomain,))
+                    date = cursor.fetchone()[0]
+                    print(f"{subdomain} [discovered on {date}]")
+                else:
+                    print(subdomain)
 
 def main():
     print_banner()
@@ -122,6 +135,7 @@ def main():
     parser.add_argument('--dump', action='store_true', help='Dump all subdomains for a specific domain')
     parser.add_argument('--list', action='store_true', help='List all root domains in the database')
     parser.add_argument('-df', help='File with domains to scan')
+    parser.add_argument('--info', action='store_true', help='Show discovery date for subdomains')
     parser.add_argument('-help', '-?', action='help', default=argparse.SUPPRESS,
                         help='Show this help message and exit')
     args = parser.parse_args()
@@ -152,10 +166,9 @@ def main():
                             insert_subdomains([new_subdomain], manually=False)
             time.sleep(args.h * 60 * 60)
     elif args.dump and args.d:
-        dump_subdomains(args.d)
+        dump_subdomains(args.d, show_info=args.info)  # Pass the --info flag value to dump_subdomains
     elif args.list:
         list_domains()
-
 
 if __name__ == "__main__":
     main()
