@@ -15,7 +15,8 @@
 - **Fast**
 - **Easy to use**
 - **Easy to install**
-- **Continously save subdomains in local database (with the possibility of dumping them all)**
+- **Easy to customize**
+- **Continuously save subdomains in the local database (with the possibility of dumping them all)**
 - **Telegram/slack/discord notifications**
 
 ## Help Menu
@@ -85,7 +86,7 @@ subtest.testX.ibm.com
 ...
 ````
 
-Now, the file containing the subdomanis can be passed to **sub.Monitor** with the following command:
+Now, the file containing the subdomains can be passed to **sub.Monitor** with the following command:
 
 ````console
 python3 monitor.py --add ibm.com --file ibm_sorted_subdomains.txt
@@ -149,15 +150,15 @@ It is also possible to monitor more than 1 domain, with the following command:
 python3 monitor.py -df root-domains.txt -h 8
 ````
 
-After those messages are reported, on the same time the user will recieve the notifications on telegram
+After those messages are reported, on the same time the user will receive the notifications on telegram
 
 ![image](https://github.com/e1abrador/sub.Monitor/assets/74373745/c67ceb5f-da77-4aed-ab28-73f32421273f)
 
-How do I manage the notifications? I found a pretty easy (and easy to manage) way to see all new discovered domains with discord. I got this (blurred since all of them are private programs):
+How do I manage the notifications? I found a pretty easy (and easy to manage) way to see all newly discovered domains with Discord. I got this (blurred since all of them are private programs):
 
 ![image](https://github.com/e1abrador/sub.Monitor/assets/74373745/e82a94ea-3310-48ad-a2aa-0f40a6b29637)
 
-The idea is first create a category regarding the program name:
+The idea is first to create a category regarding the program name:
 
 \> Yahoo
 
@@ -175,13 +176,13 @@ The idea is first create a category regarding the program name:
   
 --- etc ...
 
-This is how my notify config file looks like:
+This is what my notify config file looks like:
 
 ![image](https://github.com/e1abrador/sub.Monitor/assets/74373745/1f060b91-01a2-4790-8663-d2535b58bc4e)
 
-I recommend to do this for each domain (it may be pretty tedious to set up this but it is a great way to manage the results). monitor.py script will send the results to the given webhook based on the ID (which must be the same as the domain name to scan).
+I recommend doing this for each domain (it may be pretty tedious to set up this but it is a great way to manage the results). monitor.py script will send the results to the given webhook based on the ID (which must be the same as the domain name to scan).
 
-Let's say that the script has been running for 2 months and you want to get all the results (old subdomains and new discovered ones). With sub.Monitor it is possible using --dump flag:
+Let's say that the script has been running for 2 months and you want to get all the results (old subdomains and newly discovered ones). With sub.Monitor whether it is possible using the --dump flag:
 
 ````console
 python3 monitor.py -d ibm.com --dump
@@ -231,7 +232,7 @@ test2.ibm.com [discovered on 08/08/2023]
 ## TODO
 
 - Implement the monitoring of more than 1 subdomain. [DONE] 
-- Continously read the domain files so new domains can be scanned without stopping the program. [DONE]
+- Continuously read the domain files so new domains can be scanned without stopping the program. [DONE]
 
 If you have any idea of some new functionality open a PR at https://github.com/e1abrador/sub.Monitor/pulls.
 
