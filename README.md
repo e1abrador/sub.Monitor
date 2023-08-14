@@ -168,6 +168,7 @@ test2.ibm.com [discovered on 08/08/2023]
   
   - Projectdiscovery for creating [subfinder](https://github.com/projectdiscovery/subfinder) and [notify](https://github.com/projectdiscovery/notify)!.
   - Thanks to OWASP for their amazing project [amass](https://github.com/owasp-amass/amass/)!.
+  - Tomnomnom for creating [assetfinder](https://github.com/tomnomnom/assetfinder)!.
 
 ## TODO
 
