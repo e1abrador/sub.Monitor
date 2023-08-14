@@ -123,6 +123,34 @@ After those messages are reported, on the same time the user will recieve the no
 
 ![image](https://github.com/e1abrador/sub.Monitor/assets/74373745/c67ceb5f-da77-4aed-ab28-73f32421273f)
 
+How do I manage the notifications? I found a pretty easy (and easy to manage) way to see all new discovered domains with discord. I got this (blurred since all of them are private programs):
+
+![image](https://github.com/e1abrador/sub.Monitor/assets/74373745/e82a94ea-3310-48ad-a2aa-0f40a6b29637)
+
+The idea is first create a category regarding the program name:
+
+\> Yahoo
+
+--- yahoo.com
+  
+--- yahoo.net
+  
+--- etc ...
+  
+\> IBM
+
+--- ibm.com
+  
+--- whateverdomain.com
+  
+--- etc ...
+
+This is how my notify config file looks like:
+
+![image](https://github.com/e1abrador/sub.Monitor/assets/74373745/1f060b91-01a2-4790-8663-d2535b58bc4e)
+
+I recommend to do this for each domain (it may be pretty tedious to set up this but it is a great way to manage the results). monitor.py script will send the results to the given webhook based on the ID (which must be the same as the domain name to scan).
+
 Let's say that the script has been running for 2 months and you want to get all the results (old subdomains and new discovered ones). With sub.Monitor it is possible using --dump flag:
 
 ````console
