@@ -42,6 +42,36 @@ options:
 - You will need to specify the binary and config paths on **sub.monitor-config.ini** file.
 - Finally, execute ``pip3 install -r requirements.txt``
 
+You can easily implement your own tools on the script, just modify the lines of code:
+
+````python
+def run_tool(tool, domain, output_file):
+    print(f'[{datetime.datetime.now()}] - Running {tool} on {domain}')
+    if tool == 'assetfinder':
+        assetfinder_binary = config.get('Binary paths', 'assetfinder')
+        cmd = f'echo {domain} | {assetfinder_binary} -subs-only | grep -E "{domain}$" |grep -v "*" | grep -v "@"'
+    elif tool == 'subfinder':
+        subfinder_binary = config.get('Binary paths', 'subfinder')
+        subfinder_api = config.get('Api', 'subfinder_api')
+        cmd = f'{subfinder_binary} -d {domain} -silent -pc {subfinder_api} -all'
+    elif tool == 'amass':
+        amass_binary = config.get('Binary paths', 'amass')
+        amass_api = config.get('Api', 'amass_api')
+        cmd = f'{amass_binary} enum -passive -norecursive -noalts -d {domain} -config {amass_api}'
+    elif tool == 'my-custom-tool':
+        my-custom-tool-binary = config.get('Binary paths', 'my-custom-tool-binary-or-script')
+        cmd = f'{my-custom-tool-binary} -d {domain}'
+````
+
+Also add your tool name here:
+
+````python
+                for tool in ['subfinder', 'amass', 'assetfinder', 'my-custom-tool-name']:
+                    run_tool(tool, domain, output_file)
+````
+
+The only needed thing is that once the command is finished, it must show on the output all the domains discovered so the tool can save them on the logs file and inside the database
+
 ## Work plan
 
 First of all **sub.Monitor** needs a list of already scanned domains:
