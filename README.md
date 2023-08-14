@@ -38,7 +38,7 @@ options:
   
 - [Subfinder](https://github.com/projectdiscovery/subfinder/tree/main#post-installation-instructions) api configuration file.
 - [Amass](https://github.com/owasp-amass/amass/blob/master/examples/config.ini) api configuration file.
-- [Notify]() api configuration file.
+- Notify api configuration file.
 - You will need to specify the binary and config paths on **sub.monitor-config.ini** file.
 - Finally, execute ``pip3 install -r requirements.txt``
 
@@ -143,7 +143,7 @@ subdomain2.ibm.com
 ...
 ````
 
-También se puede utilizar el siguiente comando para poder ver el día en el cual se descubrió el dominio:
+You can also use the following command to see the day on which the domain was discovered:
 
 ````console
 python3 monitor.py -d ibm.com --dump --info
@@ -159,7 +159,7 @@ python3 monitor.py -d ibm.com --dump --info
 
 Subdomains for ibm.com:
 test.ibm.com [discovered on 06/08/2023]
-test2.ibm.com [discovered on 06/08/2023]
+test2.ibm.com [discovered on 08/08/2023]
 ````
 
   ## Thanks
