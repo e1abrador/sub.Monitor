@@ -75,6 +75,8 @@ Also add your tool name here:
                     run_tool(tool, domain, output_file)
 ````
 
+Finally, of course, you need to add the tool on the sub.monitor-config.ini file so that the python script can get the binary from that configuration file.
+
 The only needed thing is that once the command is finished, it must show on the output all the domains discovered so the tool can save them on the logs file and inside the database
 
 ## Work plan
