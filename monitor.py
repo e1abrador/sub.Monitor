@@ -91,7 +91,7 @@ def run_tool(tool, domain, output_file):
     print(f'[{datetime.datetime.now()}] - Running {tool} on {domain}')
     if tool == 'assetfinder':
         assetfinder_binary = config.get('Binary paths', 'assetfinder')
-        cmd = f'echo {domain} | {assetfinder_binary} -subs-only | grep -E "{domain}$" |grep -v "*" | grep -v "@"'
+        cmd = f'echo {domain} | {assetfinder_binary} -subs-only | grep -E ".{domain}$" |grep -v "*" | grep -v "@" | sort -u'
     elif tool == 'subfinder':
         subfinder_binary = config.get('Binary paths', 'subfinder')
         subfinder_api = config.get('Api', 'subfinder_api')
