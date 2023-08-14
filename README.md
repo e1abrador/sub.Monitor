@@ -176,3 +176,10 @@ test2.ibm.com [discovered on 08/08/2023]
 - Continously read the domain files so new domains can be scanned without stopping the program. [DONE]
 
 If you have any idea of some new functionality open a PR at https://github.com/e1abrador/sub.Monitor/pulls.
+
+Good luck and good hunting!
+If you really love the tool (or any others), or they helped you find an awesome bounty, consider [BUYING ME A COFFEE!](https://www.buymeacoffee.com/e1abrador) ☕ (I could use the caffeine!)
+
+⚪ e1abrador
+
+<a href='https://www.buymeacoffee.com/e1abrador' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
