@@ -84,17 +84,22 @@ def notify(subdomain, domain):
 
     notify_binary = config.get('Binary paths', 'notify')
     notify_api = config.get('Api', 'notify_api')
-    command = f'echo "Subdomain {subdomain} has been discovered in {domain}!" | {notify_binary} -silent -config {notify_api}'
+    command = f'echo "Subdomain {subdomain} has been discovered!" | {notify_binary} -silent -config {notify_api} -id {domain}'
     subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
 def run_tool(tool, domain, output_file):
     print(f'[{datetime.datetime.now()}] - Running {tool} on {domain}')
     if tool == 'assetfinder':
-        cmd = f'assetfinder --subs-only {domain}'
+        assetfinder_binary = config.get('Binary paths', 'assetfinder')
+        cmd = f'echo {domain} | {assetfinder_binary} -subs-only | grep -E "{domain}$" |grep -v "*" | grep -v "@"'
     elif tool == 'subfinder':
-        cmd = f'subfinder -d {domain} -silent'
+        subfinder_binary = config.get('Binary paths', 'subfinder')
+        subfinder_api = config.get('Api', 'subfinder_api')
+        cmd = f'{subfinder_binary} -d {domain} -silent -pc {subfinder_api} -all'
     elif tool == 'amass':
-        cmd = f'amass enum -passive -d {domain}'
+        amass_binary = config.get('Binary paths', 'amass')
+        amass_api = config.get('Api', 'amass_api')
+        cmd = f'{amass_binary} enum -passive -norecursive -noalts -d {domain} -config {amass_api}'
     else:
         return
     try:
@@ -154,7 +159,7 @@ def main():
                     os.remove(output_file)
 
                 known = get_known_subdomains()
-                for tool in ['subfinder', 'amass']:
+                for tool in ['subfinder', 'amass', 'assetfinder']:
                     run_tool(tool, domain, output_file)
 
                 with open(output_file) as f:
