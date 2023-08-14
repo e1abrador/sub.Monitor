@@ -11,6 +11,10 @@
 
 ![image](https://github.com/e1abrador/sub.Monitor/assets/74373745/b7bfe315-fa26-4f55-b0af-5a3db4995dc0)
 
+## Why?
+
+Why opt for sub.Monitor? This program offers easy setup due to its utilization of SQLite for storing all identified domains (removing the necessity for prior database management). Moreover, it boasts high customizability, with users needing to append only a few lines of code to the script using their chosen tools. In contrast to other existing solutions relying on databases such as MySQL or MongoDB, initializing the script can turn into a tedious task.
+
 ## Features
 - **Fast**
 - **Easy to use**
