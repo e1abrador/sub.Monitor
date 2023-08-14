@@ -174,3 +174,5 @@ test2.ibm.com [discovered on 08/08/2023]
 
 - Implement the monitoring of more than 1 subdomain. [DONE] 
 - Continously read the domain files so new domains can be scanned without stopping the program. [DONE]
+
+If you have any idea of some new functionality open a PR at https://github.com/e1abrador/sub.Monitor/pulls.
