@@ -120,7 +120,6 @@ It is possible to create a file with this stuff:
 
 ````console
 cat outscope.txt
-*.ibm.com
 super-admin.ibm.com
 *.super-admin.ibm.com
 ````
