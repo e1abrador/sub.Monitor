@@ -168,7 +168,8 @@ python3 monitor.py -d ibm.com -h 8
 If any subdomain is found, sub.Monitor will show the following message on the output:
 
 ````console
-➜ python3 monitor.py -d ibm.com -h 12
+➜ python3 monitor.py -d ibm.com -h 8 # To filter the subdomains that are in the current scope from the out-scope ones, you can use:
+                                      # python3 monitor.py -d ibm.com -h 8 --out-scope outscope.txt
 
           _    ___  ___            _ _
           | |   |  \/  |           (_) |
@@ -188,6 +189,7 @@ It is also possible to monitor more than 1 domain, with the following command:
 
 ````console
 python3 monitor.py -df root-domains.txt -h 8
+python3 monitor.py -df roots.txt -h 8 --out-scope outscope.txt
 ````
 
 After those messages are reported, on the same time the user will receive the notifications on telegram
