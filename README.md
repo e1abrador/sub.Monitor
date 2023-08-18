@@ -28,13 +28,20 @@ Why opt for sub.Monitor? This program offers easy setup due to its utilization o
 
 ```console
 options:
-  --add ADD    Domain to scan
-  --file FILE  File with known subdomains
-  -d D         Domain to scan
-  -h A         Hours between scans
-  --dump       Dump all subdomains for a specific domain
-  --list       List all root domains in the database
-  -help, -?    Show this help message and exit
+  --add ADD             Domain to scan
+  --out-scope OUT_SCOPE
+                        File with out-of-scope domains
+  --file FILE           File with known subdomains
+  -d D                  Domain to scan
+  -h H                  Hours between scans
+  --dump                Dump all subdomains for a specific domain
+  --list                List all root domains in the database
+  -df DF                File with domains to scan
+  --inscope             Dump only in-scope domains
+  --notinscope          Dump only out-of-scope domains
+  --dumpall             Dump all subdomains with their details
+  --info                Show discovery date for subdomains
+  -help, -?             Show this help message and exit
   ````
   
   ## Previous needed configurations
