@@ -6,6 +6,7 @@ import time
 import datetime
 import tldextract
 import configparser
+import fnmatch
 
 DATABASE = 'subdomains.db'
 DB_NAME = 'subdomains.db'
@@ -25,13 +26,22 @@ def print_banner():
                     github.com/e1abrador/sub.Monitor
     ''')
 
-
 def initialize_db():
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS subdomains 
                           (subdomain TEXT, added_manually INTEGER, 
-                           discovered INTEGER, discovered_on TEXT)''')
+                           discovered INTEGER, discovered_on TEXT, out_of_scope INTEGER)''')
+
+def load_out_of_scope_patterns(filename):
+    with open(filename, 'r') as f:
+        return f.read().splitlines()
+
+def is_out_of_scope(subdomain, patterns):
+    for pattern in patterns:
+        if fnmatch.fnmatch(subdomain, pattern):
+            return True
+    return False
 
 def get_known_subdomains():
     with sqlite3.connect(DATABASE) as conn:
@@ -39,19 +49,22 @@ def get_known_subdomains():
         cursor.execute('SELECT subdomain FROM subdomains')
         return [row[0] for row in cursor.fetchall()]
 
-def insert_subdomains(subdomains, manually=False):
+def insert_subdomains(subdomains, out_of_scope_domains=[], manually=False):
     unique_subdomains = list(set(subdomains))
     known_subdomains = get_known_subdomains()
-    
+
     new_subdomains = [sub for sub in unique_subdomains if sub not in known_subdomains]
     current_date = datetime.datetime.now().strftime('%d/%m/%Y')  # Get the current date
-    
+
+    def is_out_of_scope(subdomain):
+        return any(fnmatch.fnmatch(subdomain, pattern) for pattern in out_of_scope_domains)
+
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
         # Include the discovery date when inserting a new subdomain
-        cursor.executemany('INSERT INTO subdomains VALUES (?, ?, ?, ?)', 
-                           [(sub, int(manually), int(not manually), current_date) for sub in new_subdomains])
-    
+        cursor.executemany('INSERT INTO subdomains VALUES (?, ?, ?, ?, ?)', 
+                           [(sub, int(manually), int(not manually), current_date, int(is_out_of_scope(sub))) for sub in new_subdomains])
+
     return len(new_subdomains)
 
 def list_domains():
@@ -81,7 +94,6 @@ def count_total_unique_subdomains():
         return cursor.fetchone()[0]
 
 def notify(subdomain, domain):
-
     notify_binary = config.get('Binary paths', 'notify')
     notify_api = config.get('Api', 'notify_api')
     command = f'echo "Subdomain {subdomain} has been discovered!" | {notify_binary} -silent -config {notify_api} -id {domain}'
@@ -113,20 +125,60 @@ def run_tool(tool, domain, output_file):
         for subdomain in result:
             print(subdomain, file=f)
 
-def dump_subdomains(domain, show_info=False):  # Add show_info argument
-    known = get_known_subdomains()
-    print(f"Subdomains for {domain}:")
-    
+def dump_subdomains(domain, show_info=False, inscope=False):
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
-        for subdomain in known:
-            if domain in subdomain:
-                if show_info:
-                    cursor.execute('SELECT discovered_on FROM subdomains WHERE subdomain = ?', (subdomain,))
-                    date = cursor.fetchone()[0]
-                    print(f"{subdomain} [discovered on {date}]")
-                else:
-                    print(subdomain)
+
+        sql_query = '''SELECT * FROM subdomains WHERE subdomain LIKE ?'''
+        cursor.execute(sql_query, (f'%{domain}%',))
+        results = cursor.fetchall()
+
+        for result in results:
+            subdomain, added_manually, discovered, discovered_on, out_of_scope_db = result
+
+            if inscope and out_of_scope_db:  # if the --inscope flag is provided, and the subdomain is out of scope, then skip it
+                continue
+
+            out_of_scope_string = "[Out of scope]" if out_of_scope_db else ""
+
+            if show_info:
+                print(f"{subdomain} [discovered on {discovered_on}] {out_of_scope_string}")
+            else:
+                print(f"{subdomain} {out_of_scope_string}")
+
+def print_subdomain(subdomain, date, show_info, out_of_scope_val):
+    out_of_scope_str = '[Out of scope]' if out_of_scope_val == 1 else ''
+    if show_info:
+        print(f"{subdomain} [discovered on {date}] {out_of_scope_str}")
+    else:
+        print(subdomain)
+
+def set_scope_based_on_file(subdomain):
+    with open('outscope.txt', 'r') as file:
+        outscope_domains = file.readlines()
+
+    return 0 if subdomain + '\n' in outscope_domains else 1
+
+def parse_out_of_scope(file_path):
+    with open(file_path, 'r') as file:
+        return file.read().splitlines()
+
+def is_out_of_scope(subdomain, out_of_scope_list):
+    for pattern in out_of_scope_list:
+        # Check if the pattern is a wildcard like *.preprod.example.com
+        if pattern.startswith('*.') and subdomain.endswith(pattern[1:]):
+            return True
+        # Check if the pattern is a wildcard like v1-*.preprod.example.com
+        elif '*.' in pattern and pattern.replace('*.', '') in subdomain:
+            return True
+        # Direct match
+        elif pattern == subdomain:
+            return True
+    return False
+
+def load_out_of_scope_patterns(filename):
+    with open(filename, 'r') as f:
+        return f.read().splitlines()
 
 def main():
     print_banner()
@@ -134,21 +186,28 @@ def main():
 
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument('--add', help='Domain to scan')
+    parser.add_argument('--out-scope', help='File with out-of-scope domains')
     parser.add_argument('--file', help='File with known subdomains')
     parser.add_argument('-d', help='Domain to scan')
     parser.add_argument('-h', type=int, help='Hours between scans')
     parser.add_argument('--dump', action='store_true', help='Dump all subdomains for a specific domain')
     parser.add_argument('--list', action='store_true', help='List all root domains in the database')
     parser.add_argument('-df', help='File with domains to scan')
+    parser.add_argument('--inscope', action='store_true', help='Dump only in-scope domains')
+    parser.add_argument('--notinscope', action='store_true', help='Dump only out-of-scope domains')
+    parser.add_argument('--dumpall', action='store_true', help='Dump all subdomains with their details')
     parser.add_argument('--info', action='store_true', help='Show discovery date for subdomains')
-    parser.add_argument('-help', '-?', action='help', default=argparse.SUPPRESS,
-                        help='Show this help message and exit')
+    parser.add_argument('-help', '-?', action='help', default=argparse.SUPPRESS, help='Show this help message and exit')
     args = parser.parse_args()
 
     if args.add and args.file:
+        out_scope_rules = []
+        if args.out_scope:
+            out_scope_rules = load_out_of_scope_patterns(args.out_scope)
         with open(args.file) as f:
-            num_inserted = insert_subdomains(f.read().splitlines(), manually=True)
+            num_inserted = insert_subdomains(f.read().splitlines(), out_of_scope_domains=out_scope_rules, manually=True)
             print(f'[{datetime.datetime.now()}] - {num_inserted} subdomains were added to the local database.')
+
     elif args.df and args.h:
         while True:
             with open(args.df) as f:
@@ -170,8 +229,10 @@ def main():
                             print(f'[{datetime.datetime.now()}] - New subdomain {new_subdomain} discovered')
                             insert_subdomains([new_subdomain], manually=False)
             time.sleep(args.h * 60 * 60)
+
     elif args.dump and args.d:
-        dump_subdomains(args.d, show_info=args.info)  # Pass the --info flag value to dump_subdomains
+        dump_subdomains(args.d, show_info=args.info, inscope=args.inscope)  # Pass the --inscope flag value to dump_subdomains
+
     elif args.list:
         list_domains()
 
