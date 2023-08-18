@@ -108,6 +108,41 @@ python3 monitor.py --add ibm.com --file ibm_sorted_subdomains.txt
 [2023-06-06 18:16:26.002521] - 538 subdomains were added to the local database.
 ````
 
+Also there is a possibility to add an out-of-scope flag, for example, let's say that a Bug Bounty program has the following policy:
+
+````console
+*.ibm.com - in scope
+super-admin.ibm.com - out of scope
+*.super-admin.ibm.com - out of scope
+````
+
+It is possible to create a file with this stuff:
+
+````console
+cat outscope.txt
+*.ibm.com
+super-admin.ibm.com
+*.super-admin.ibm.com
+````
+
+Now, you can add manually all your discovered domains to the database (filtering the ones that are in scope):
+
+````console
+python3 monitor.py --add ibm.com --file ibm_sorted_subdomains.txt --out-scope outscope.txt
+          _    ___  ___            _ _
+          | |   |  \/  |           (_) |
+ ___ _   _| |__ | .  . | ___  _ __  _| |_ ___  _ __
+/ __| | | | '_ \| |\/| |/ _ \| '_ \| | __/ _ \| '__|
+\__ \ |_| | |_) | |  | | (_) | | | | | || (_) | |
+|___/\__,_|_.__/\_|  |_/\___/|_| |_|_|\__\___/|_|
+
+                    github.com/e1abrador/sub.Monitor
+
+[2023-06-06 18:16:26.002521] - 538 subdomains were added to the local database.
+````
+
+This will add all your subdomains to the database, but it will mark all the ones that are out of scope with the flag ``[Out of scope]`` (we will see how to filter in-scope domains from the database on dumping domains section).
+
 To confirm that the domain has been added to the database, execute:
 
 ```console
@@ -224,7 +259,26 @@ python3 monitor.py -d ibm.com --dump --info
 
 Subdomains for ibm.com:
 test.ibm.com [discovered on 06/08/2023]
-test2.ibm.com [discovered on 08/08/2023]
+test2.ibm.com [discovered on 08/08/2023] [Out of scope]
+````
+
+As it's highly probable that some domains are marked as out of scope using ``python3 monitor.py -d ibm.com --dump --info`` command, in order to show only the domains in-scope it is possible to use ``--inscope`` flag:
+
+````console
+python3 monitor.py -d ibm.com --dump --info --inscope
+
+          _    ___  ___            _ _
+          | |   |  \/  |           (_) |
+ ___ _   _| |__ | .  . | ___  _ __  _| |_ ___  _ __
+/ __| | | | '_ \| |\/| |/ _ \| '_ \| | __/ _ \| '__|
+\__ \ |_| | |_) | |  | | (_) | | | | | || (_) | |
+|___/\__,_|_.__/\_|  |_/\___/|_| |_|_|\__\___/|_|
+
+                    github.com/e1abrador/sub.Monitor
+
+Subdomains for ibm.com:
+test.ibm.com [discovered on 06/08/2023]
+test3.ibm.com [discovered on 08/08/2023]
 ````
 
   ## Thanks
@@ -239,7 +293,7 @@ test2.ibm.com [discovered on 08/08/2023]
 
 - Implement the monitoring of more than 1 subdomain. [DONE] 
 - Continuously read the domain files so new domains can be scanned without stopping the program. [DONE]
-- Implement out of scope filtering [Soon]
+- Implement out of scope filtering [DONE]
   
 If you have any idea of some new functionality open a PR at https://github.com/e1abrador/sub.Monitor/pulls.
 
