@@ -96,7 +96,7 @@ def count_total_unique_subdomains():
 def notify(subdomain, domain):
     notify_binary = config.get('Binary paths', 'notify')
     notify_api = config.get('Api', 'notify_api')
-    command = f'echo "Subdomain {subdomain} has been discovered!" | {notify_binary} -silent -config {notify_api} -id {domain}'
+    command = f'echo "Subdomain {subdomain} has been discovered!" | {notify_binary} -silent -config {notify_api}'
     subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
 def run_tool(tool, domain, output_file):
