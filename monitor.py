@@ -185,7 +185,7 @@ def main():
     initialize_db()
 
     parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument('--add', help='Domain to scan')
+    parser.add_argument('--add', help='Add root domain to the database')
     parser.add_argument('--out-scope', help='File with out-of-scope domains')
     parser.add_argument('--file', help='File with known subdomains')
     parser.add_argument('-D', '--domain', help='Domain to scan')
