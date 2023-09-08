@@ -171,14 +171,14 @@ ibm.com [9 subdomains added manually] [2 subdomains discovered] [11 total unique
 Once it has been correctly loaded, the monitoring process can start. It is recommended to use TMUX in a VPS and leave it running for a long time. With the following command, the script will be running the subdomain enumeration tools and will compare the new results with the old results. If there's any new subdomain found, sub.Monitor will first add it to the local database (so it will not notify anymore about that discovery) and then will notify the user via slack/telegram/discord.
 
 ````console
-python3 monitor.py -d ibm.com -h 8
+python3 monitor.py -D ibm.com -H 12 --out-scope outscope.txt
 ````
 
 If any subdomain is found, sub.Monitor will show the following message on the output:
 
 ````console
-➜ python3 monitor.py -d ibm.com -h 8 # To filter the subdomains that are in the current scope from the out-scope ones, you can use:
-                                      # python3 monitor.py -d ibm.com -h 8 --out-scope outscope.txt
+➜ python3 monitor.py -D ibm.com -H 8 # To filter the subdomains that are in the current scope from the out-scope ones, you can use:
+                                      # python3 monitor.py -D ibm.com -H 8 --out-scope outscope.txt
 
           _    ___  ___            _ _
           | |   |  \/  |           (_) |
@@ -197,8 +197,8 @@ If any subdomain is found, sub.Monitor will show the following message on the ou
 It is also possible to monitor more than 1 domain, with the following command:
 
 ````console
-python3 monitor.py -df root-domains.txt -h 8
-python3 monitor.py -df roots.txt -h 8 --out-scope outscope.txt
+python3 monitor.py -df root-domains.txt -H 8
+python3 monitor.py -df roots.txt -H 8 --out-scope outscope.txt
 ````
 
 After those messages are reported, on the same time the user will receive the notifications on telegram
@@ -236,7 +236,7 @@ I recommend doing this for each domain (it may be pretty tedious to set up this 
 Let's say that the script has been running for 2 months and you want to get all the results (old subdomains and newly discovered ones). With sub.Monitor whether it is possible using the --dump flag:
 
 ````console
-python3 monitor.py -d ibm.com --dump
+python3 monitor.py -D ibm.com --dump
 
           _    ___  ___            _ _
           | |   |  \/  |           (_) |
@@ -256,7 +256,7 @@ subdomain2.ibm.com
 You can also use the following command to see the day on which the domain was discovered:
 
 ````console
-python3 monitor.py -d ibm.com --dump --info
+python3 monitor.py -D ibm.com --dump --info
 
           _    ___  ___            _ _
           | |   |  \/  |           (_) |
@@ -275,7 +275,7 @@ test2.ibm.com [discovered on 08/08/2023] [Out of scope]
 As it's highly probable that some domains are marked as out of scope using ``python3 monitor.py -d ibm.com --dump --info`` command, in order to show only the domains in-scope it is possible to use ``--inscope`` flag:
 
 ````console
-python3 monitor.py -d ibm.com --dump --info --inscope
+python3 monitor.py -D ibm.com --dump --info --inscope
 
           _    ___  ___            _ _
           | |   |  \/  |           (_) |
