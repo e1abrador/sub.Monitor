@@ -32,8 +32,10 @@ options:
   --out-scope OUT_SCOPE
                         File with out-of-scope domains
   --file FILE           File with known subdomains
-  -d D                  Domain to scan
-  -h H                  Hours between scans
+  -D DOMAIN, --domain DOMAIN
+                        Domain to scan
+  -H HOURS, --hours HOURS
+                        Hours between scans
   --dump                Dump all subdomains for a specific domain
   --list                List all root domains in the database
   -df DF                File with domains to scan
