@@ -188,8 +188,8 @@ def main():
     parser.add_argument('--add', help='Domain to scan')
     parser.add_argument('--out-scope', help='File with out-of-scope domains')
     parser.add_argument('--file', help='File with known subdomains')
-    parser.add_argument('-d', help='Domain to scan')
-    parser.add_argument('-h', type=int, help='Hours between scans')
+    parser.add_argument('-D', '--domain', help='Domain to scan')
+    parser.add_argument('-H', '--hours', type=int, help='Hours between scans')
     parser.add_argument('--dump', action='store_true', help='Dump all subdomains for a specific domain')
     parser.add_argument('--list', action='store_true', help='List all root domains in the database')
     parser.add_argument('-df', help='File with domains to scan')
@@ -208,7 +208,7 @@ def main():
             num_inserted = insert_subdomains(f.read().splitlines(), out_of_scope_domains=out_scope_rules, manually=True)
             print(f'[{datetime.datetime.now()}] - {num_inserted} subdomains were added to the local database.')
 
-    elif args.df and args.h:
+    elif args.df and args.hours:
         while True:
             with open(args.df) as f:
                 domains = f.read().splitlines()
@@ -228,10 +228,30 @@ def main():
                             notify(new_subdomain, domain)
                             print(f'[{datetime.datetime.now()}] - New subdomain {new_subdomain} discovered')
                             insert_subdomains([new_subdomain], manually=False)
-            time.sleep(args.h * 60 * 60)
+            time.sleep(args.hours * 60 * 60)
 
-    elif args.dump and args.d:
-        dump_subdomains(args.d, show_info=args.info, inscope=args.inscope)  # Pass the --inscope flag value to dump_subdomains
+    elif args.domain and args.hours:
+        domain = args.domain
+        while True:
+            output_file = f'logs/{domain}_results_log.txt'
+            if os.path.exists(output_file):
+                os.remove(output_file)
+
+            known = get_known_subdomains()
+            for tool in ['subfinder', 'amass', 'assetfinder']:
+                run_tool(tool, domain, output_file)
+
+            with open(output_file) as f:
+                for line in f:
+                    new_subdomain = line.strip()
+                    if new_subdomain not in known:
+                        notify(new_subdomain, domain)
+                        print(f'[{datetime.datetime.now()}] - New subdomain {new_subdomain} discovered')
+                        insert_subdomains([new_subdomain], manually=False)
+            time.sleep(args.hours * 60 * 60)
+
+    elif args.dump and args.domain:
+        dump_subdomains(args.domain, show_info=args.info, inscope=args.inscope)
 
     elif args.list:
         list_domains()
