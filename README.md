@@ -77,6 +77,15 @@ def run_tool(tool, domain, output_file):
         cmd = f'{my-custom-tool-binary} -d {domain}'
 ````
 
+It's important to note that if you add any custom tool, the last output must be the domain results in order to sub.Monitor save them on the database, for example the way of using it would be:
+
+````bash
+cmd = f'bash customtool.sh {domain}''
+...
+cat myscript.sh
+mycustomtool -d $1 > /tmp/$1.txt &>/dev/null; cat /tmp/$1.txt | unfurl domains | anew; rm -r /tmp/$1.txt
+````
+
 Also add your tool name here:
 
 ````python
