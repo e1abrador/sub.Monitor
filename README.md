@@ -82,7 +82,7 @@ It's important to note that if you add any custom tool, the last output must be 
 ````bash
 cmd = f'bash customtool.sh {domain}''
 ...
-cat myscript.sh
+cat customtool.sh
 mycustomtool -d $1 > /tmp/$1.txt &>/dev/null; cat /tmp/$1.txt | unfurl domains | anew; rm -r /tmp/$1.txt
 ````
 
